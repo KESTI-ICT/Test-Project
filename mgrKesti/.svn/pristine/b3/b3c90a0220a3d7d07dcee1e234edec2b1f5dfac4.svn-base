@@ -1,0 +1,37 @@
+package mgrKesti.pgtInfo.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mgrKesti.logInfo.controller.LoginController;
+import mgrKesti.logInfo.mapper.LoginMapper;
+import mgrKesti.logInfo.service.LoginService;
+import mgrKesti.logInfo.vo.LoginInfoSerachVO;
+import mgrKesti.pgtInfo.mapper.ProjectMapper;
+import mgrKesti.pgtInfo.service.ProjectService;
+import mgrKesti.pgtInfo.vo.ProjectInfoVO;
+
+@Service("projectService")
+@Transactional
+public class ProjectServiceImpl implements ProjectService{
+	
+	private static final Logger logger = LoggerFactory.getLogger(ProjectServiceImpl.class);
+
+	/** projectMapper */
+	@Resource(name = "projectMapper")
+	private ProjectMapper projectMapper;
+
+	@Override
+	public List<ProjectInfoVO> selectProjectInfo() throws Exception{
+		logger.debug("========= getLoginInfoImpl START ===========");
+		logger.debug("========= getLoginInfoImpl END ===========");
+		
+		return projectMapper.selectProjectInfo();
+	}
+}

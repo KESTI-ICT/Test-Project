@@ -1,0 +1,62 @@
+package mgrKesti.pgtInfo.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+* <pre>
+* ClassName : PgtInfoController.java
+* Description : PgtInfoController Class
+* Modification Information
+*
+* 수정일       수정자        수정내용
+* ---------    ---------   -------------------------------
+* 2020. 03. 24.   yis      최초생성
+*
+* Copyright (C) by KR All right reserved.
+* </pre>
+* @author KESTI 공수 관리 시스템
+* @since 2020. 03. 24.
+* @version 1.0
+*
+*/
+@Controller
+public class PgtInfoController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(PgtInfoController.class);
+	
+	/**
+     * <pre>
+     * 프로젝트정보 화면 접속.
+     * </pre>
+     * @param request
+     * @param response
+     * @param model
+     * @return
+     * @throws Exception
+     * @author yis
+     * @since 2020. 03. 24.
+     */
+	@RequestMapping(value = "/pgtInfo/projectListLookup.do")
+	public String projectListLookup(HttpServletRequest req, HttpServletResponse res, Model model) throws Exception {
+		System.out.println("========= projectListLookup START2 ===========");
+		
+		String userId  = req.getParameter("userId");	//로그인 ID
+		String userPwd = req.getParameter("userPwd");	//로그인 패스워드
+		
+		System.out.println("userId : " + userId);
+		System.out.println("userPwd : " + userPwd);
+		
+		model.addAttribute("userId", userId);
+		model.addAttribute("userPwd", userPwd);
+		
+		System.out.println("========= projectListLookup END2 ===========");
+		return "project";
+	}
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mgrKesti_projectInfo">
+	<select id="selectProjectInfo" resultType="mgrKesti.pgtInfo.vo.ProjectInfoVO">
+		SELECT  a.pms_seq			AS pmsSeq
+			   ,replace(a.project_name, ' ', '')	AS projectName
+			   ,a.start_date		AS startDate
+			   ,a.end_date			AS endDate
+			   ,a.project_type		AS projectType
+			   ,a.customer_name		AS customerName
+			   ,a.agent_name 		AS agentName
+			   ,replace(a.suggestion_type, ' ', '')	AS suggestionType
+			   ,a.create_user_id	AS createUserId
+			   ,a.create_date		AS createDate
+			   ,a.modify_user_id	AS modifyUserId
+			   ,a.modify_date		AS modifyDate
+			   ,a.use_yn			AS useYn
+			   ,a.predict_mm		AS predictMm
+			   ,SUM(b.mm_total)		AS mmTotal
+			   ,c.project_type_code AS projectTypeCode
+			   ,d.agent_id 			AS agentId
+			   ,e.suggestion_type_code AS suggestionTypeCode
+			   ,f.customer_id 		AS customerId
+		FROM   kesti_pms.pms_project a
+			  ,kesti_pms.pms_project_mm b
+			  ,kesti_pms.pms_project_type c
+			  ,kesti_pms.common_agent d
+			  ,kesti_pms.pms_suggestion_type e
+			  ,kesti_pms.common_customer f
+		WHERE a.pms_seq = b.pms_seq_id 
+		AND   a.project_type = c.project_type
+		AND   a.agent_name = d.agent_name
+		AND   a.suggestion_type = e.suggestion_type
+		AND   a.customer_name = f.customer_name
+		GROUP BY a.pms_seq, c.project_type_code, d.agent_id, e.suggestion_type_code, f.customer_id
+	</select>
+</mapper>

@@ -1,0 +1,6 @@
+@charset "utf-8";
+body{ font-family:'nanumsquarer','나눔고딕',NanumGothic; color:#333; font-size:14px; line-height:22px; overflow-x:hidden;  -webkit-text-size-adjust:none;}
+
+
+.error_txt{ color:#df2451; font-size:14px; font-weight:bold; margin:5px 0 0 0; position:relative}
+.error_txt a{ position:absolute; right:0; top:0}

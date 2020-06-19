@@ -1,0 +1,323 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn"     uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%
+/**
+* @Class Name : 
+* @Description : 
+* @Modification Information
+*
+*   수정일         수정자                   수정내용
+*  -------    --------    ---------------------------
+*  2020.03.30            최초 생성
+*
+* author 실행환경 개발팀
+* since 2020.03.31
+* 
+* Copyright (C) 2020 by Korea Environmental Science All right reserved.
+*/
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<%@ include file="/WEB-INF/views/typelink.jsp" %>
+
+<link type="text/css" rel="stylesheet" href="<c:url value='/resources/css/sample.css'/>"/>
+<link type="text/css" rel="stylesheet" href="<c:url value='/resources/css/common/common.css'/>"/>
+<link type="text/css" rel="stylesheet" href="<c:url value='/resources/css/common/board.css'/>"/>
+
+<script type="text/javascript" src="<c:url value="/resources/js/common/jquery.form2.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/common/jquery.MetaData.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/common/jquery.MultiFile.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/resources/js/pgtInfo/project.js"/>"></script>
+
+<script type="text/javaScript" language="javascript" defer="defer"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+});
+</script>
+</head>
+
+<body style="text-align:center; margin:0 auto; display:inline; padding-top:100px;">
+<form id="lForm" name="lForm" method="post">
+	<jsp:include page="/WEB-INF/views/inc/gnb.jsp" flush="true" />
+	<!-- 로그인 정보 -->
+	<input type="hidden" id="userId" name="userId" value="${userId}" />
+	<input type="hidden" id="userPw" name="userPw" value="${userPw}" />
+	<input type="hidden" id="authId" name="authId" value="${authId}" />
+	
+	<input type="hidden" id="pageIndex" name="pageIndex" value="1" />
+	
+	<input type="hidden" id="projectType1" name="projectType1" value="" />
+	<input type="hidden" id="customerName1" name="customerName1" value="" />
+	<input type="hidden" id="agentName1" name="agentName1" value="" />
+	<input type="hidden" id="suggestionType1" name="suggestionType1" value="" />
+	
+	<input type="hidden" id="projectType2" name="projectType2" value="" />
+	<input type="hidden" id="customerName2" name="customerName2" value="" />
+	<input type="hidden" id="agentName2" name="agentName2" value="" />
+	<input type="hidden" id="suggestionType2" name="suggestionType2" value="" />
+	
+	<input type="hidden" id="pmsSeq" name="pmsSeq" value="0" />
+	
+	<c:choose>
+		<c:when test="${authId == 'A0001'}">
+			<div style="color:blue;">일반으로 로그인 하셨습니다.</div>
+		</c:when>
+		<c:when test="${authId == 'A0002'}">
+			<div style="color:red;">관리자로 로그인 하셨습니다.</div>
+		</c:when>
+		<c:otherwise>
+			<div style="color:green;">시스템으로 로그인 하셨습니다.</div>
+		</c:otherwise>
+	</c:choose>
+	
+	<div style="float:right; margin-right:20px;">
+		<input type="button" id="btn_logout" value="로그아웃" onclick="fn_logout();"/>
+	</div>
+	<div id="login">
+		<fieldset>
+			<legend style="font-weight:bold;">프로젝트목록</legend>
+		</fieldset>
+	</div>
+	
+	<div style="float:right; margin-right:20px;">
+		<!-- <input type="button" id="btn_search" value="조회" onclick="javascript:fn_search();"/> -->
+		<c:if test="${authId == 'A0002'}">
+			<input type="button" id="btn_insert" value="등록" onclick="javascript:pushLayer1();"/>
+		</c:if>
+	</div>
+	
+	<div style="float:right; margin-top:40px;">
+		<ul>
+			<li><b>전체 : <span>${totalCount}</span>건</b></li>
+			<li>[${pageIndex + 1}페이지/${totalPage}페이지]</li>
+		</ul>
+	</div>
+	
+	<div class="table_row">
+		<table class="bbslist">
+			<caption></caption>
+			<colgroup>
+				<col width="12%" />
+				<col width="13%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="*" />
+			</colgroup>
+			<thead class="">
+				<tr>
+					<th scope="col">프로젝트명</th>
+					<th scope="col">프로젝트 기간</th>
+					<th scope="col">고객사</th>
+					<th scope="col">수행사</th>
+					<th scope="col">계액현황</th>
+					<th scope="col">예상공수</th>
+					<th scope="col">산정공수</th>
+					<th scope="col">관리</th>
+				</tr>
+			</thead>
+			<tbody id="data" class="">
+				<c:if test="${fn:length(projectInfoList) != 0 }">
+					<c:forEach var="list" items="${projectInfoList}" varStatus="status">
+					<tr>
+						<td scope="row" style="text-align:left;">${list.projectName}</td>
+						<td>${list.startDate} ~ ${list.endDate}</td>
+						<td>${list.customerName}</td>
+						<td>${list.agentName}</td>
+						<td>${list.suggestionType}</td>
+						<td>${list.predictMm}</td>
+						<td>${list.mmTotal}</td>
+						<c:if test="${authId == 'A0002'}">
+							<td>
+								<input type="button" value="수정" onclick="javascript:fn_modifyForm('<c:out value="${list.pmsSeq}"/>');" />
+								<input type="button" value="삭제" onclick="javascript:fn_delete('<c:out value="${list.pmsSeq}"/>');" />
+							</td>
+						</c:if>
+					</tr>
+					</c:forEach>
+				</c:if>
+				<c:if test="${fn:length(projectInfoList) == 0 }">
+					<tr>
+						<td colspan="9">조회 된 내역이 없습니다.</td>
+					</tr>
+				</c:if>
+			</tbody>
+		</table>
+		<div style="position:absolute; left:50%;">${pagenation}</div>
+	</div>
+	
+	<!-- 레이어팝업 등록 start -->
+	<div id="all_body1"></div>
+	<div id="lay_pop1" class="table_row">
+		<fieldset>
+			<legend style="font-weight:bold;">프로젝트 등록</legend>
+		</fieldset>
+		<table class="bbslist" style="width:750px; margin:auto; text-align:center;">
+			<caption></caption>
+			<tr>
+				<th colspan="4" style="text-align:left; font-weight:bold; font-size:15px; padding-left:15px;">기본정보(*필수입력)</th>
+			</tr>
+			<tr>
+				<th>프로젝트명*</th>
+				<td colspan="3" style="text-align:left; padding-left:5px;">
+					<input type="text" id="projectName1" name="projectName1" value="" maxlength="20" />
+				</td>
+			</tr>
+			<tr>
+				<th>프로젝트기간*</th>
+				<td colspan="3" style="text-align:left; padding-left:5px;">
+					<input type="text" id="strDate1" name="strDate1" class="txttype" style="width:65px;" placeholder="0000-00-00" readonly="readonly"/>
+					~
+					<input type="text" id="endDate1" name="endDate1" class="txttype" style="width:65px;" readonly="readonly" />
+
+					<input type="checkbox" id="chk_undef1" name="chk_undef1" value="" /> 미정 <span style="color:red;"> (* 금일부터 연말로 입력 됨.)</span>
+				</td>
+			</tr>
+			<tr>
+				<th>프로젝트유형*</th>
+				<td colspan="3" style="text-align:left; padding-left:5px;">
+					<select id="projectTypeCode1" name="projectTypeCode1" title="프로젝트유형 선택" style="width:106px">
+						<option value="">선택</option>
+						<c:forEach items="${commonPgtTypeInfoList}" var="list" varStatus="status">
+							<option value="${list.commonCode}">${list.commonName}</option>
+						</c:forEach>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>고객사*</th>
+				<td style="text-align:left; padding-left:5px;">
+					<select id="customerId1" name="customerId1" title="고객사 선택" style="width:169px;">
+						<option value="">선택</option>
+						<c:forEach items="${commonCustomerInfoList}" var="list" varStatus="status">
+							<option value="${list.commonCode}">${list.commonName}</option>
+						</c:forEach>
+					</select>
+				</td>
+				<th>수행사*</th>
+				<td style="text-align:left; padding-left:5px;">
+					<select id="agentId1" name="agentId1" title="수행사 선택" style="width:169px;">
+						<option value="">선택</option>
+						<c:forEach items="${commonAgentInfoList}" var="list" varStatus="status">
+							<option value="${list.commonCode}">${list.commonName}</option>
+						</c:forEach>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>계약현황*</th>
+				<td colspan="3" style="text-align:left; padding-left:5px;">
+					<select id="suggestionTypeCode1" name="suggestionTypeCode1" title="계약현황 선택" style="width:169px;">
+						<option value="">선택</option>
+						<c:forEach items="${commonSgtTypeInfoList}" var="list" varStatus="status">
+							<option value="${list.commonCode}">${list.commonName}</option>
+						</c:forEach>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>예상공수</th>
+				<td colspan="3" style="text-align:left; padding-left:5px;">
+					<input type="text" id="predictMm1" name="predictMm1" value="0" maxlength="3" onkeydown="return fn_onlyNumber(event);"/>
+					<span style="color:red;">* 숫자만 입력 가능</span>
+				</td>
+			</tr>
+		</table>
+		<a href="javascript:;" onclick="layerSave('lay_pop1', 'all_body1', '1')"><input type="button" value="저장"/></a>
+		<a href="javascript:;" onclick="layerClose('lay_pop1', 'all_body1')"><input type="button" value="취소"/></a>
+	</div>
+	<!-- 레이어팝업 End -->
+	
+	<!-- 레이어팝업 수정 start -->
+	<div id="all_body2"></div>
+	<div id="lay_pop2" class="table_row">
+		<fieldset>
+			<legend style="font-weight:bold;">프로젝트 수정</legend>
+		</fieldset>
+		<table class="bbslist" style="width:750px; margin:auto; text-align:center;">
+			<caption></caption>
+			<tr>
+				<th colspan="4" style="text-align:left; font-weight:bold; font-size:15px; padding-left:15px;">기본정보(*필수입력)</th>
+			</tr>
+			<tr>
+				<th>프로젝트명*</th>
+				<td colspan="3" style="text-align:left; padding-left:5px;">
+					<input type="text" id="projectName2" name="projectName2" value="" maxlength="20" />
+				</td>
+			</tr>
+			<tr>
+				<th>프로젝트기간*</th>
+				<td colspan="3" style="text-align:left; padding-left:5px;">
+					<input type="text" id="strDate2" name="strDate2" class="txttype" style="width:65px;" placeholder="0000-00-00" readonly="readonly"/>
+					~
+					<input type="text" id="endDate2" name="endDate2" class="txttype" style="width:65px;" readonly="readonly" />
+					
+					<input type="checkbox" id="chk_undef2" name="chk_undef2" value="" /> 미정 <span style="color:red;"> (* 금일부터 연말로 입력 됨.)</span>
+				</td>
+			</tr>
+			<tr>
+				<th>프로젝트유형*</th>
+				<td colspan="3" style="text-align:left; padding-left:5px;">
+					<select id="projectTypeCode2" name="projectTypeCode2" title="프로젝트유형 선택" style="width:106px">
+						<option value="">선택</option>
+						<c:forEach items="${commonPgtTypeInfoList}" var="list" varStatus="status">
+							<option value="${list.commonCode}">${list.commonName}</option>
+						</c:forEach>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>고객사*</th>
+				<td style="text-align:left; padding-left:5px;">
+					<select id="customerId2" name="customerId2" title="고객사 선택" style="width:169px;">
+						<option value="">선택</option>
+						<c:forEach items="${commonCustomerInfoList}" var="list" varStatus="status">
+							<option value="${list.commonCode}">${list.commonName}</option>
+						</c:forEach>
+					</select>
+				</td>
+				<th>수행사*</th>
+				<td style="text-align:left; padding-left:5px;">
+					<select id="agentId2" name="agentId2" title="수행사 선택" style="width:169px;">
+						<option value="">선택</option>
+						<c:forEach items="${commonAgentInfoList}" var="list" varStatus="status">
+							<option value="${list.commonCode}">${list.commonName}</option>
+						</c:forEach>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>계약현황*</th>
+				<td colspan="3" style="text-align:left; padding-left:5px;">
+					<select id="suggestionTypeCode2" name="suggestionTypeCode2" title="계약현황 선택" style="width:169px;">
+						<option value="">선택</option>
+						<c:forEach items="${commonSgtTypeInfoList}" var="list" varStatus="status">
+							<option value="${list.commonCode}">${list.commonName}</option>
+						</c:forEach>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>예상공수</th>
+				<td colspan="3" style="text-align:left; padding-left:5px;">
+					<input type="text" id="predictMm2" name="predictMm2" value="0" maxlength="3" onkeydown="return fn_onlyNumber(event);"/>
+					<span style="color:red;">* 숫자만 입력 가능</span>
+				</td>
+			</tr>
+		</table>
+		<a href="javascript:;" onclick="layerSave('lay_pop2', 'all_body2', '2')"><input type="button" value="저장"/></a>
+		<a href="javascript:;" onclick="layerClose('lay_pop2', 'all_body2')"><input type="button" value="취소"/></a>
+	</div>
+	<!-- 레이어팝업 End -->
+</form>
+</body>
+</html>

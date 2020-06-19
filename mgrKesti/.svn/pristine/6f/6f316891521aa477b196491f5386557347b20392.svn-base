@@ -1,0 +1,119 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%
+  /**
+  * @Class Name : egovSampleList.jsp
+  * @Description : Sample List 화면
+  * @Modification Information
+  *
+  *   수정일         수정자                   수정내용
+  *  -------    --------    ---------------------------
+  *  2009.02.01            최초 생성
+  *
+  * author 실행환경 개발팀
+  * since 2009.02.01
+  *
+  * Copyright (C) 2009 by MOPAS  All right reserved.
+  */
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<link type="text/css" rel="stylesheet" href="<c:url value='/resources/css/sample.css'/>"/>
+<link type="text/css" rel="stylesheet" href="<c:url value='/resources/css/common.css'/>"/>
+<link type="text/css" rel="stylesheet" href="<c:url value='/resources/css/board.css'/>"/>
+
+<script type="text/javascript" src="<c:url value="/resources/js/jquery-1.11.3.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/common/commonUtil.js"/>"></script>
+
+<script type="text/javaScript" language="javascript" defer="defer"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	
+});
+
+function fn_crud(num){
+	alert(num);
+}
+
+</script>
+</head>
+
+<body style="text-align:center; margin:0 auto; display:inline; padding-top:100px;">
+<form name="lForm" method="post">
+	<input type="hidden" id="userid" value="${userid}" readonly="readonly" />
+	<input type="hidden" id="userpw" value="${userpw}" readonly="readonly" />
+	<input type="hidden" id="mgryn" value="${mgryn}" readonly="readonly" />
+	
+	<input type="hidden" id="testBtn" value="9999" />
+	
+	<c:if test="${mgryn == 'Y'}">
+		<div style="color:red;">관리자로 로그인 하셨습니다.</div>
+	</c:if>
+	<div id="login">
+		<fieldset>
+			<legend>프로젝트목록</legend>
+		</fieldset> 
+	</div>
+	
+	<c:if test="${mgryn == 'Y'}">
+		<div style="float:right; margin-right:20px;">
+			<input type="button" id="bnt3" value="등록" onclick=";"/>
+		</div>
+	</c:if>
+	<div class="table_row">
+		<table class="bbslist">
+			<caption></caption>
+			<colgroup>
+				<col width="12%" />
+				<col width="13%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="*" />
+			</colgroup>
+			<thead class="">
+				<tr>
+					<th scope="col">프로젝트명</th>
+					<th scope="col">프로젝트기간</th>
+					<th scope="col">고객사</th>
+					<th scope="col">수행사</th>
+					<th scope="col">계액현황</th>
+					<th scope="col">예상공수</th>
+					<th scope="col">산정공수</th>
+					<th scope="col">관리</th>
+				</tr>
+			</thead>
+			<tbody class="">
+				<%-- <c:if test="${!empty result }"> --%>
+					<%-- <c:forEach items="${result }" var="list" varStatus="idx"> --%>
+						<tr>
+							<td scope="row" style="text-align:left;">테스트1</td>
+							<td>테스트2</td>
+							<td>테스트3</td>
+							<td>테스트4</td>
+							<td>테스트2</td>
+							<td>테스트3</td>
+							<td>테스트4</td>
+							<td>
+								<input type="button" id="bnt1" value="수정" onclick="fn_crud(1);"/>
+								<input type="button" id="bnt2" value="삭제" onclick="fn_crud(2);"/>
+							</td>
+						</tr>
+					<%-- </c:forEach> --%>
+				<%-- </c:if>	 --%>
+			</tbody>
+		</table>
+	</div>
+	
+</form>
+</body>
+</html>

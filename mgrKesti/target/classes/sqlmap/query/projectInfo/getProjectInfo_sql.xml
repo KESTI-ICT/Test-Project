@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mgrKesti_projectInfo">
+	<!--
+	쿼리명	  :	  프로젝트 리스트 조회
+	설명	   :   프로젝트 리스트	 조회를 한다.
+	작성자	  :	  yis
+	수정일									 수정자				수정내용
+	=========		======		========================
+	2020.04.03		yis			최초 생성
+	-->
+	<select id="selectProjectListInfo" parameterType="java.util.HashMap" resultType="mgrKesti.pgtInfo.vo.ProjectInfoVO">
+		SELECT   totalCount
+				,pageIndex
+				,pmsSeq                 AS pmsSeq
+				,projectName            AS projectName
+				,startDate              AS startDate
+				,endDate                AS endDate
+				,projectType            AS projectType
+				,customerName			AS customerName
+				,agentName              AS agentName
+				,suggestionType         AS suggestionType
+				,createUserId           AS createUserId
+				,createDate             AS createDate
+				,modifyUserId           AS modifyUserId
+				,modifyDate             AS modifyDate
+				,useYn                  AS useYn
+				,predictMm              AS predictMm
+				,mmTotal                AS mmTotal
+				,projectTypeCode        AS projectTypeCode
+				,agentId                AS agentId
+				,suggestionTypeCode     AS suggestionTypeCode
+				,customerId             AS customerId
+		FROM(
+			SELECT	COUNT(*) OVER()						AS totalCount
+				   ,CEIL(ROW_NUMBER() OVER()/11)		AS pageIndex
+				   ,a.pms_seq							AS pmsSeq
+				   ,replace(a.project_name, ' ', '')	AS projectName
+				   ,a.start_date						AS startDate
+				   ,a.end_date							AS endDate
+				   ,a.project_type						AS projectType
+				   ,a.customer_name						AS customerName
+				   ,a.agent_name						AS agentName
+				   ,replace(a.suggestion_type, ' ', '')	AS suggestionType
+				   ,a.create_user_id					AS createUserId
+				   ,a.create_date						AS createDate
+				   ,a.modify_user_id					AS modifyUserId
+				   ,a.modify_date						AS modifyDate
+				   ,a.use_yn							AS useYn
+				   ,a.predict_mm						AS predictMm
+				   ,(SELECT COALESCE(SUM(mm_total), 0) FROM kesti_pms.pms_project_mm WHERE a.pms_seq = pms_seq_id )	AS	mmTotal
+				   ,c.project_type_code					AS projectTypeCode
+				   ,d.agent_id							AS agentId
+				   ,e.suggestion_type_code				AS suggestionTypeCode
+				   ,f.customer_id						AS customerId
+			FROM   kesti_pms.pms_project a
+				  ,kesti_pms.pms_project_mm b
+				  ,kesti_pms.pms_project_type c
+				  ,kesti_pms.common_agent d
+				  ,kesti_pms.pms_suggestion_type e
+				  ,kesti_pms.common_customer f
+			WHERE 1=1
+			AND	  a.project_type	= c.project_type
+			AND	  a.agent_name		= d.agent_name
+			AND	  a.suggestion_type = e.suggestion_type
+			AND	  a.customer_name	= f.customer_name
+			GROUP BY a.pms_seq, c.project_type_code, d.agent_id, e.suggestion_type_code, f.customer_id
+			ORDER BY a.pms_seq, a.project_name
+		) T1
+		WHERE 1=1
+		<if test="pageIndex != ''">
+			<if test="pageIndex > 0">
+				AND PAGEINDEX = #{pageIndex} - 1
+			</if>
+		</if>
+	</select>
+
+	<!--
+	쿼리명	  :	  프로젝트 단건 조회
+	설명	   :   프로젝트 단건	조회를 한다.
+	작성자	  :	  yis
+	수정일									 수정자				수정내용
+	=========		======		========================
+	2020.04.10		yis			최초 생성
+	-->
+	<select id="selectProjectInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT	a.pms_seq			AS pmsSeq
+		   ,a.project_name			AS projectName
+		   ,a.start_date			AS startDate
+		   ,a.end_date				AS endDate
+		   ,a.project_type			AS projectType
+		   ,(SELECT project_type_code FROM kesti_pms.pms_project_type WHERE project_type = a.project_type) AS projectTypeCode
+		   ,a.customer_name			AS customerName
+		   ,(SELECT customer_id FROM kesti_pms.common_customer WHERE customer_name = a.customer_name) AS customerId
+		   ,a.agent_name			AS agentName
+			,(SELECT agent_id FROM kesti_pms.common_agent WHERE agent_name = a.agent_name) AS agentId
+		   ,a.suggestion_type		AS suggestionType
+		   ,(SELECT suggestion_type_code FROM kesti_pms.pms_suggestion_type WHERE suggestion_type = a.suggestion_type) AS suggestionTypeCode
+		   ,a.create_user_id		AS createUserId
+		   ,a.create_date			AS createDate
+		   ,a.modify_user_id		AS modifyUserId
+		   ,a.modify_date			AS modifyDate
+		   ,a.use_yn				AS useYn
+		   ,a.predict_mm			AS predictMm
+		   ,(SELECT COALESCE(SUM(mm_total), 0) FROM kesti_pms.pms_project_mm WHERE a.pms_seq = pms_seq_id )	AS	mmTotal
+		FROM   kesti_pms.pms_project a
+		WHERE 1=1
+		and a.pms_seq = #{pmsSeq}
+		ORDER BY a.pms_seq, a.project_name
+	</select>
+
+	<!--
+	쿼리명	  :	  프로젝트 리스트 조회
+	설명	   :   프로젝트 리스트	 조회를 한다.
+	작성자	  :	  yis
+	수정일									 수정자				수정내용
+	=========		======		========================
+	2020.04.03		yis			최초 생성
+	-->
+	<insert id="insertProjectInfo" parameterType="mgrKesti.pgtInfo.vo.ProjectInfoVO">
+		INSERT INTO kesti_pms.pms_project(
+			 project_name
+			,start_date
+			,end_date
+			,project_type
+			,customer_name
+			,agent_name
+			,suggestion_type
+			,predict_mm
+			,create_user_id
+			,create_date
+			,modify_user_id
+			,modify_date
+
+		)VALUES(
+			 #{projectName}
+			,#{startDate}
+			,#{endDate}
+			,#{projectType}
+			,#{customerName}
+			,#{agentName}
+			,#{suggestionType}
+			,COALESCE(#{predictMm}, 0)
+			,#{createId}
+			,NOW()
+			,#{modifyId}
+			,NOW()
+		)
+	</insert>
+	<!--
+	쿼리명	  :	  프로젝트 리스트 삭제
+	설명	   :   프로젝트 리스트	 삭제한다.
+	작성자	  :	  yis
+	수정일									 수정자				수정내용
+	=========		======		========================
+	2020.04.03		yis			최초 생성
+	-->
+	<delete id="deleteProjectInfo" parameterType="Integer">
+		DELETE
+		FROM  kesti_pms.pms_project
+		WHERE pms_seq = #{pmsSeq}
+	</delete>
+	<!--
+	쿼리명	  :	  프로젝트 리스트 삭제
+	설명	   :   프로젝트 리스트	 삭제한다.
+	작성자	  :	  yis
+	수정일									 수정자				수정내용
+	=========		======		========================
+	2020.04.03		yis			최초 생성
+	-->
+	<update id="updateProjectInfo" parameterType="mgrKesti.pgtInfo.vo.ProjectInfoVO">
+		UPDATE kesti_pms.pms_project
+		SET	   project_name	   = #{projectName}
+			  ,start_date	   = #{startDate}
+			  ,end_date		   = #{endDate}
+			  ,project_type	   = #{projectType}
+			  ,customer_name   = #{customerName}
+			  ,agent_name	   = #{agentName}
+			  ,suggestion_type = #{suggestionType}
+			  ,predict_mm	   = #{predictMm}
+			  ,modify_user_id  = #{modifyId}
+			  ,modify_date	   = NOW()
+		 WHERE 1=1
+		   AND pms_seq		   = #{pmsSeq}
+	</update>
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mgrKesti_predictMmInfo">
+	<!--
+	쿼리명   :   예상공수 리스트 조회
+	설명     :   예상공수 리스트  조회를 한다.
+	작성자   :   yis
+	수정일                                  수정자                수정내용
+	=========       ======      ========================
+	2020.04.06      yis         최초 생성
+	-->
+	<select id="selectPredictMmListInfo" resultType="mgrKesti.predictMmInfo.vo.PredictMmInfoVO">
+		SELECT  pms_seq_id					AS pmsSeqId
+			   ,user_id						AS managerId
+			   ,pms_user_role_code			AS pmsUserRoleCode
+			   ,project_name				AS projectName
+			   ,project_user_role_detail	AS projectUserRoleDetail
+			   ,mm_year						AS mmYear
+			   ,mm_total					AS mmTotal
+			   ,ROUND(mm_01::numeric, 2)	AS mmOne
+			   ,ROUND(mm_02::numeric, 2)	AS mmTwo
+			   ,ROUND(mm_03::numeric, 2)	AS mmThree
+			   ,ROUND(mm_04::numeric, 2)	AS mmFour
+			   ,ROUND(mm_05::numeric, 2)	AS mmFive
+			   ,ROUND(mm_06::numeric, 2)	AS mmSix
+			   ,ROUND(mm_07::numeric, 2)	AS mmSeven
+			   ,ROUND(mm_08::numeric, 2)	AS mmEight
+			   ,ROUND(mm_09::numeric, 2)	AS mmNine
+			   ,ROUND(mm_10::numeric, 2)	AS mmTen
+			   ,ROUND(mm_11::numeric, 2)	AS mmEleven
+			   ,ROUND(mm_12::numeric, 2)	AS mmTwelve
+		FROM kesti_pms.pms_project_mm
+		ORDER BY pms_seq_id, user_id, pms_user_role_code
+	</select>
+	
+	<!--
+	쿼리명   :   예상공수 단건 조회
+	설명     :   예상공수 단건  조회를 한다.
+	작성자   :   yis
+	수정일                                  수정자                수정내용
+	=========       ======      ========================
+	2020.04.06      yis         최초 생성
+	-->
+	<select id="selectPredictMmInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT  pms_seq_id					AS pmsSeqId
+			   ,user_id						AS managerId
+			   ,pms_user_role_code			AS pmsUserRoleCode
+			   ,project_name				AS projectName
+			   ,project_user_role_detail	AS projectUserRoleDetail
+			   ,mm_year						AS mmYear
+			   ,mm_total					AS mmTotal
+			   ,ROUND(mm_01::numeric, 2)	AS mmOne
+			   ,ROUND(mm_02::numeric, 2)	AS mmTwo
+			   ,ROUND(mm_03::numeric, 2)	AS mmThree
+			   ,ROUND(mm_04::numeric, 2)	AS mmFour
+			   ,ROUND(mm_05::numeric, 2)	AS mmFive
+			   ,ROUND(mm_06::numeric, 2)	AS mmSix
+			   ,ROUND(mm_07::numeric, 2)	AS mmSeven
+			   ,ROUND(mm_08::numeric, 2)	AS mmEight
+			   ,ROUND(mm_09::numeric, 2)	AS mmNine
+			   ,ROUND(mm_10::numeric, 2)	AS mmTen
+			   ,ROUND(mm_11::numeric, 2)	AS mmEleven
+			   ,ROUND(mm_12::numeric, 2)	AS mmTwelve
+		FROM kesti_pms.pms_project_mm
+		WHERE 1=1
+		AND   pms_seq_id         = #{pmsSeqId}
+		AND   user_id            = #{managerId}
+		AND   pms_user_role_code = #{pmsUserRoleCode}
+		ORDER BY pms_seq_id, user_id, pms_user_role_code
+	</select>
+	
+	<!--
+	쿼리명   :   예상공수 리스트 삭제
+	설명     :   예상공수 리스트  삭제한다.
+	작성자   :   yis
+	수정일                                  수정자                수정내용
+	=========       ======      ========================
+	2020.04.06      yis         최초 생성
+	-->
+	<delete id="deletePredictMmInfo" parameterType="java.util.HashMap">
+		DELETE 
+		FROM  kesti_pms.pms_project_mm
+		WHERE 1=1
+		AND   pms_seq_id         = #{pmsSeqId}
+		AND   user_id            = #{managerId}
+		AND   pms_user_role_code = #{pmsUserRoleCode}
+	</delete>
+</mapper>

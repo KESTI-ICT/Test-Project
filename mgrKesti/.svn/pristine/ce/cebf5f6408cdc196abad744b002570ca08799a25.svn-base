@@ -1,0 +1,33 @@
+package mgrKesti.common.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mgrKesti.common.mapper.CommonMapper;
+import mgrKesti.common.service.CommonService;
+import mgrKesti.common.vo.CommonCodeVO;
+
+@Service("commonService")
+@Transactional
+public class CommonServiceImpl implements CommonService{
+	
+	private static final Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
+
+	/** projectMapper */
+	@Resource(name = "commonMapper")
+	private CommonMapper commonMapper;
+
+	@Override
+	public List<CommonCodeVO> selectCommonPgtTypeInfo() throws Exception{
+		logger.debug("========= selectCommonPgtTypeInfo START ===========");
+		logger.debug("========= selectCommonPgtTypeInfo END ===========");
+		
+		return commonMapper.selectCommonPgtTypeInfo();
+	}
+}

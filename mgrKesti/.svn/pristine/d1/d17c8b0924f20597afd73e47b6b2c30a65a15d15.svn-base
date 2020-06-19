@@ -1,0 +1,29 @@
+package mgrKesti.logInfo.service.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mgrKesti.logInfo.mapper.LoginMapper;
+import mgrKesti.logInfo.service.LoginService;
+import mgrKesti.logInfo.vo.LoginInfoSerachVO;
+
+@Service("loginService")
+@Transactional
+public class LoginServiceImpl implements LoginService{
+
+	/** loginDAO */
+	@Resource(name = "loginMapper")
+	private LoginMapper loginMapper;
+
+	@Override
+	public LoginInfoSerachVO getLoginInfo(String userid) throws Exception{
+		System.out.println("========= getLoginInfoImpl START ===========");
+		 
+		LoginInfoSerachVO result = loginMapper.getLoginInfo(userid);
+		
+		System.out.println("========= getLoginInfoImpl END ===========");
+		return result;
+	}
+}

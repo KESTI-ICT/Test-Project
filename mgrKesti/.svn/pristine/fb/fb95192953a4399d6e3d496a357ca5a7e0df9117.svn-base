@@ -1,0 +1,172 @@
+$(function (){
+});
+
+//로그아웃 버튼 클릭시 처리
+function fn_logout(){
+	$("#userId").val("");
+	$("#userPw").val("");
+
+	fn_submit(lForm, "/mgrKesti/logInfo/login.do", "_self", "post");
+}
+
+//수정 or 삭제 버튼 클릭시 처리
+function fn_saveMm(num, pmsSeqId, managerId, pmsUserRoleCode){
+	if(pmsSeqId != "" && managerId != "" && pmsUserRoleCode != ""){
+		if(num == "1"){
+			$.ajax({
+				type : "post",
+				url : "/mgrKesti/predictInfo/predictMmLookup.do",
+				data : {pmsSeqId : pmsSeqId, managerId : managerId, pmsUserRoleCode : pmsUserRoleCode},
+				dataType : "json",
+				success : function(result){
+					//화면 셋팅
+					$("#pmsSeqId").val(result['predictMmInfo'].pmsseqid);
+					$("#pmsUserRoleCode2").val(result['predictMmInfo'].pmsuserrolecode).prop("selected", true);
+					$("#managerId2").val(result['predictMmInfo'].managerid);
+					$("#mmYear2").val(result['predictMmInfo'].mmyear);
+					$("#pmsUserRole2").val(result['predictMmInfo'].projectuserroledetail);
+					$("#mmOne2").val(result['predictMmInfo'].mmone);
+					$("#mmTwo2").val(result['predictMmInfo'].mmtwo);
+					$("#mmThree2").val(result['predictMmInfo'].mmthree);
+					$("#mmFour2").val(result['predictMmInfo'].mmfour);
+					$("#mmFive2").val(result['predictMmInfo'].mmfive);
+					$("#mmSix2").val(result['predictMmInfo'].mmsix);
+					$("#mmSeven2").val(result['predictMmInfo'].mmseven);
+					$("#mmEight2").val(result['predictMmInfo'].mmeight);
+					$("#mmNine2").val(result['predictMmInfo'].mmnine);
+					$("#mmTen2").val(result['predictMmInfo'].mmten);
+					$("#mmEleven2").val(result['predictMmInfo'].mmeleven);
+					$("#mmTwelve2").val(result['predictMmInfo'].mmtwelve);
+					
+					pushLayer();
+				},error:function(request, status, error){
+
+				}, beforeSend:function() {
+					//wrapWindowByMask();0
+				}, complete:function() {
+					//closeWindowByMask();
+				}
+			});
+		}else{
+			$("#pmsSeqId").val(pmsSeqId);
+			$("#managerId").val(managerId);
+			$("#pmsUserRoleCode").val(pmsUserRoleCode);
+			
+			if(!confirm("프로젝트를 삭제 하시겠습니까?")) return;
+			fn_submit(lForm, "/mgrKesti/predictInfo/deletePredictMmInfo.do", "_self", "post");
+		}
+	}
+	
+}
+
+//저장 버튼 클릭시 처리
+function layerSave(lay1, lay2){
+	/*if($("#predictMm2").val() == ""){
+		$("#predictMm1").val(0)
+	}*/
+
+	//validation 체크
+	/*if($("#projectName2").val() == ""){
+		alert("프로젝트명을 입력해주세요");
+		return;
+	}*/
+
+	/*if($("#projectTypeCode2 option:selected").val() == ""){
+		alert("프로젝트유형을 선택 해주세요");
+		return;
+	}*/
+
+	/*if($("#customerId2 option:selected").val() == ""){
+		alert("고객사를 선택 해주세요");
+		return;
+	}*/
+
+	if($("#managerId2").val() == ""){
+		alert("담당자를 입력 해주세요");
+		return;
+	}
+	
+	if($("#mmYear2").val() == ""){
+		alert("기준년도를 입력 해주세요");
+		return;
+	}
+
+	if($("#pmsUserRoleCode2 option:selected").val() == ""){
+		alert("담당자역할을 선택 해주세요");
+		return;
+	}
+	
+	//selectBox req 셋팅
+	//$("#projectType2").val($("#projectTypeCode2 option:selected").text());
+	//$("#customerName2").val($("#customerId2 option:selected").text());
+	//$("#agentName2").val($("#agentId2 option:selected").text());
+	//$("#suggestionType2").val($("#suggestionTypeCode2 option:selected").text());
+	
+	$("#managerId").val($("#managerId2").val());
+	$("#pmsUserRoleCode").val($("#pmsUserRoleCode2 option:selected").val());
+	
+	$("#"+lay1).css("display", "none");
+	$("#"+lay2).css("display", "none");
+	
+	//update 플로우
+	fn_submit(lForm, "/mgrKesti/predictInfo/updatePredictMmInfo.do", "_self", "post");	//수정
+}
+
+//레이어팝업 오픈
+function pushLayer(){
+	var $width=parseInt($("#lay_pop2").css("width"));
+	var $height=parseInt($("#lay_pop2").css("height"));
+	var left=($(window).width()-$width)/2;
+	var sctop=$(window).scrollTop()*2;
+	var top=($(window).height()-$height+sctop)/2;
+	//var height=document.getElementsByTagName("body")[0].scrollHeight;
+	$("#lay_pop2").css("left",left);
+	$("#lay_pop2").css("top",top);
+	$("#lay_pop2").css("display","block");
+	$("#lay_pop2").css("z-index","555");
+	$("#all_body2").css("display","block");
+	$("#all_body2").css("width",$(window).width());
+	$("#all_body2").css("height","887");
+}
+
+//레이어팝업 닫기
+function layerClose(lay1,lay2){
+	//초기화
+	$("#pmsUserRoleCode2 option:eq(0)").prop("selected", true);
+	$("#mmYear2").val("");
+	$("#pmsUserRole2").val("");
+	$("#mmOne2").val("");
+	$("#mmTwo2").val("");
+	$("#mmThree2").val("");
+	$("#mmFour2").val("");
+	$("#mmFive2").val("");
+	$("#mmSix2").val("");
+	$("#mmSeven2").val("");
+	$("#mmEight2").val("");
+	$("#mmNine2").val("");
+	$("#mmTen2").val("");;
+	$("#mmEleven2").val("");
+	$("#mmTwelve2").val("");
+	
+	$("#"+lay1).css("display", "none");
+	$("#"+lay2).css("display", "none");
+}
+
+function fn_historyBack(){
+	$("#mmYear2").val(0);
+	$("#managerId2").val("");
+	$("#pmsUserRole2").val("");
+	$("#mmOne2").val(0);
+	$("#mmTwo2").val(0);
+	$("#mmThree2").val(0);
+	$("#mmFour2").val(0);
+	$("#mmFive2").val(0);
+	$("#mmSix2").val(0);
+	$("#mmSeven2").val(0);
+	$("#mmEight2").val(0);
+	$("#mmNine2").val(0);
+	$("#mmTen2").val(0);
+	$("#mmEleven2").val(0);
+	$("#mmTwelve2").val(0);
+	fn_submit(lForm, "/mgrKesti/predictInfo/predictMmListLookup.do", "_self", "post");	//수정
+}

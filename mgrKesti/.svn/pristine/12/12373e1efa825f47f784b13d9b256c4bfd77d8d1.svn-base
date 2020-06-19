@@ -1,0 +1,8 @@
+@charset "utf-8";
+body{ font-family:'nanumsquarer','나눔고딕',NanumGothic; color:#333; font-size:14px; line-height:22px; overflow-x:hidden;  -webkit-text-size-adjust:none;}
+.error_txt{ color:#df2451; font-size:14px; font-weight:bold; margin:5px 0 0 0; position:relative}
+.error_txt a{ position:absolute; right:0; top:0}
+
+/* 레이어팝업 */
+#lay_pop{position:absolute; z-index:500; width:800px; height:600px; overflow-y:scroll; display:none; background-color:#ffffff; border:2px solid #cccccc}
+#all_body{position:absolute; z-index:9; display:block; filter:alpha(opacity=50); opacity:0.5; -moz-opacity:0.5; background-color:#000000; left:0; top:0}

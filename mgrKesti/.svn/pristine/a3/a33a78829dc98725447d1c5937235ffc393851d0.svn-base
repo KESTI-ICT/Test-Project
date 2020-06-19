@@ -1,0 +1,116 @@
+/*
+ * Copyright 2008-2009 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *		http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package mgrKesti.common.mapper;
+
+import java.util.List;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import mgrKesti.common.CommonDao;
+import mgrKesti.common.vo.CommonCodeVO;
+
+@Component
+public class CommonMapper extends CommonDao{
+
+	private static final Logger logger = LoggerFactory.getLogger(CommonMapper.class);
+
+	@Autowired
+	SqlSessionTemplate sqlSessionTemplate;
+
+	/**
+	 * <pre>
+	 * 프로젝트 유형 공통 조회
+	 * </pre>
+	 * @param 없음
+	 * @return CommonCodeVO
+	 * @author yis
+	 * @since 2020. 04. 02.
+	 */
+	public List<CommonCodeVO> selectCommonPgtTypeInfo() throws Exception{
+		logger.debug("========= commonProjectInfo START ===========");
+
+		logger.debug("========= commonProjectInfo END ===========");
+		return sqlSessionTemplate.selectList("mgrKesti_commonInfo.selectCommonPgtTypeInfo");
+	}
+	
+	/**
+	 * <pre>
+	 * 고객사 공통 조회
+	 * </pre>
+	 * @param 없음
+	 * @return CommonCodeVO
+	 * @author yis
+	 * @since 2020. 04. 02.
+	 */
+	public List<CommonCodeVO> selectCommonCustomerInfo() throws Exception{
+		logger.debug("========= selectCommonCustomerInfo START ===========");
+
+		logger.debug("========= selectCommonCustomerInfo END ===========");
+		return sqlSessionTemplate.selectList("mgrKesti_commonInfo.selectCommonCustomerInfo");
+	}
+
+	/**
+	 * <pre>
+	 * 수행사 공통 조회
+	 * </pre>
+	 * @param 없음
+	 * @return CommonCodeVO
+	 * @author yis
+	 * @since 2020. 04. 02.
+	 */
+	public List<CommonCodeVO> selectCommonAgentInfo() throws Exception{
+		logger.debug("========= selectCommonAgentInfo START ===========");
+
+		logger.debug("========= selectCommonAgentInfo END ===========");
+		return sqlSessionTemplate.selectList("mgrKesti_commonInfo.selectCommonAgentInfo");
+	}
+
+	/**
+	 * <pre>
+	 * 제안현황 공통 조회
+	 * </pre>
+	 * @param 없음
+	 * @return CommonCodeVO
+	 * @author yis
+	 * @since 2020. 04. 02.
+	 */
+	public List<CommonCodeVO> selectCommonSgtTypeInfo() throws Exception{
+		logger.debug("========= selectCommonSgtTypeInfo START ===========");
+
+		logger.debug("========= selectCommonSgtTypeInfo END ===========");
+		return sqlSessionTemplate.selectList("mgrKesti_commonInfo.selectCommonSgtTypeInfo");
+	}
+	
+	/**
+	 * <pre>
+	 * 프로젝트 사용자 역할 공통 조회
+	 * </pre>
+	 * @param 없음
+	 * @return CommonCodeVO
+	 * @author yis
+	 * @since 2020. 04. 02.
+	 */
+	public List<CommonCodeVO> selectCommonUserRoleInfo() throws Exception{
+		logger.debug("========= selectCommonUserRoleInfo START ===========");
+
+		logger.debug("========= selectCommonUserRoleInfo END ===========");
+		return sqlSessionTemplate.selectList("mgrKesti_commonInfo.selectCommonUserRoleInfo");
+	}
+}

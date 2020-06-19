@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mgrKesti_projectInfo">
+	<select id="selectProjectInfo" resultType="mgrKesti.pgtInfo.vo.ProjectInfoVO">
+		SELECT  a.pms_seq			AS pmsSeq
+			   ,replace(a.project_name, ' ', '')	AS projectName
+			   ,a.start_date		AS startDate
+			   ,a.end_date			AS endDate
+			   ,a.project_type		AS projectType
+			   ,a.customer_name		AS customerName
+			   ,a.agent_name 		AS agentName
+			   ,a.suggestion_type	AS suggestionType
+			   ,a.create_user_id	AS createUserId
+			   ,a.create_date		AS createDate
+			   ,a.modify_user_id	AS modifyUserId
+			   ,a.modify_date		AS modifyDate
+			   ,a.use_yn			AS useYn
+			   ,a.predict_mm		AS predictMm
+			   ,SUM(b.mm_total)		AS mmTotal
+		FROM   kesti_pms.pms_project a
+			  ,kesti_pms.pms_project_mm b
+		WHERE a.pms_seq = b.pms_seq_id 
+		GROUP BY a.pms_seq
+	</select>
+</mapper>

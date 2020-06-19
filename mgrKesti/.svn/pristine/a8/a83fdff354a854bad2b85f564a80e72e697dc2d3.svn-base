@@ -1,0 +1,5 @@
+//input 메세지 노출 제어
+function inputTextVal(id, focusid){
+	$("#"+id).focus();
+	$("#"+focusid+"_chk").css("display", "");
+}

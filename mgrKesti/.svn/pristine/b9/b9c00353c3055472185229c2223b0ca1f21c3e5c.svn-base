@@ -1,0 +1,108 @@
+package mgrKesti.pgtInfo.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import mgrKesti.pgtInfo.mapper.ProjectMapper;
+import mgrKesti.pgtInfo.service.ProjectService;
+import mgrKesti.pgtInfo.vo.ProjectInfoVO;
+
+@Service("projectService")
+@Transactional
+public class ProjectServiceImpl implements ProjectService{
+	
+	private static final Logger logger = LoggerFactory.getLogger(ProjectServiceImpl.class);
+
+	/** projectMapper */
+	@Resource(name = "projectMapper")
+	private ProjectMapper projectMapper;
+
+	/**
+     * <pre>
+     * 프로젝트리스트 조회.
+     * </pre>
+     * @param 
+     * @throws Exception
+     * @author yis
+     * @since 2020. 04. 06.
+     */
+	@Override
+	public List<ProjectInfoVO> selectProjectListInfo(HashMap<String, Object> map) throws Exception{
+		logger.debug("========= selectProjectListInfo START ===========");
+		logger.debug("========= selectProjectListInfo END ===========");
+		
+		return projectMapper.selectProjectListInfo(map);
+	}
+	
+	/**
+     * <pre>
+     * 프로젝트단건 조회.
+     * </pre>
+     * @param 
+     * @throws Exception
+     * @author yis
+     * @since 2020. 04. 06.
+     */
+	@Override
+	public HashMap<String, Object> selectProjectInfo(HashMap<String, Object> map) throws Exception{
+		logger.debug("========= selectProjectInfo START ===========");
+		logger.debug("========= selectProjectInfo END ===========");
+		
+		return projectMapper.selectProjectInfo(map);
+	}
+	
+	/**
+     * <pre>
+     * 프로젝트정보 등록.
+     * </pre>
+     * @param ProjectInfoVO
+     * @throws Exception
+     * @author yis
+     * @since 2020. 04. 06.
+     */
+	public void insertProjectInfo(ProjectInfoVO vo) throws Exception{
+		logger.debug("========= insertProjectInfo START ===========");
+		logger.debug("========= insertProjectInfo END ===========");
+		
+		projectMapper.insertProjectInfo(vo);
+	}
+	
+	/**
+     * <pre>
+     * 프로젝트정보 삭제.
+     * </pre>
+     * @param pmsSeq
+     * @throws Exception
+     * @author yis
+     * @since 2020. 04. 06.
+     */
+	public void deleteProjectInfo(Integer pmsSeq) throws Exception{
+		logger.debug("========= deleteProjectInfo START ===========");
+		logger.debug("========= deleteProjectInfo END ===========");
+		
+		projectMapper.deleteProjectInfo(pmsSeq);
+	}
+	
+	/**
+     * <pre>
+     * 프로젝트정보 수정.
+     * </pre>
+     * @param ProjectInfoVO
+     * @throws Exception
+     * @author yis
+     * @since 2020. 04. 06.
+     */
+	public void updateProjectInfo(ProjectInfoVO vo) throws Exception{
+		logger.debug("========= updateProjectInfo START ===========");
+		logger.debug("========= updateProjectInfo END ===========");
+		
+		projectMapper.updateProjectInfo(vo);
+	}
+}

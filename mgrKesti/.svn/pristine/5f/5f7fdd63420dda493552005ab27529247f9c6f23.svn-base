@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mgrKesti_logInfo">
+	<select id="getLoginInfo" parameterType="String" resultType="mgrKesti.logInfo.vo.LoginInfoSerachVO">
+		SELECT   A.user_id       AS userId       /* 사용자id */
+				,A.user_pw       AS userPw       /* 사용자패스워드*/
+				,A.user_name     AS userName     /* 사용자명 */
+				,A.company_name  AS companyName  /* 회사명 */
+				,A.team_id       AS teamId       /* 소속팀ID */
+				,A.user_rank_id  AS userRankId   /* 직급ID */
+				,A.auth_id       AS authId       /* 권한ID */
+		FROM   kesti_pms.common_user A
+			  ,kesti_pms.common_auth B
+		WHERE  A.auth_id = B.auth_code
+		AND    A.user_id = #{userId}
+	</select>
+</mapper>

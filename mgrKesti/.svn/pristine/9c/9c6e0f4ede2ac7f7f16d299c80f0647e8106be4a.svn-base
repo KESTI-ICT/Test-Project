@@ -1,0 +1,199 @@
+$(function (){
+	$("#strDate1").datepicker({
+		  language : "ko", // 화면에 출력될 언어를 한국어로 설정한다.
+		  defalutDate : $("#strDate1").val(getTimeStamp()), // 기본값으로 오늘 날짜를 입력한다. 기본값을 해제하려면 defaultDate 옵션을 생략한다.
+		  minDate: 0,
+		  onSelect: function(dateText, inst){
+				$("#endDate1").val(dateText);
+			} 
+		});
+	
+	$("#endDate1").datepicker({
+		  language : "ko", // 화면에 출력될 언어를 한국어로 설정한다.
+		  defalutDate : $("#endDate1").val($("#strDate1").val()), // 기본값으로 오늘 날짜를 입력한다. 기본값을 해제하려면 defaultDate 옵션을 생략한다.
+	      minDate: 0,
+	      onSelect: function(dateText, inst){
+				var strDate = $("#strDate1").val();
+				var tmp = new Date(dateText) - new Date(strDate);
+				if(tmp < 0 ){
+					alert("종료날짜가 시작날짜보다 이전일이 될 수 없습니다.");
+					return;
+				}
+				
+			} 
+		});
+	
+	$("#strDate2").datepicker({
+		  language : "ko", // 화면에 출력될 언어를 한국어로 설정한다.
+		  defalutDate : $("#strDate2").val(getTimeStamp()), // 기본값으로 오늘 날짜를 입력한다. 기본값을 해제하려면 defaultDate 옵션을 생략한다.
+		  minDate: 0,
+		  onSelect: function(dateText, inst){
+				$("#endDate2").val(dateText);
+			} 
+		});
+	
+	$("#endDate2").datepicker({
+		  language : "ko", // 화면에 출력될 언어를 한국어로 설정한다.
+		  defalutDate : $("#endDate2").val($("#strDate2").val()), // 기본값으로 오늘 날짜를 입력한다. 기본값을 해제하려면 defaultDate 옵션을 생략한다.
+	      minDate: 0,
+	      onSelect: function(dateText, inst){
+				var strDate = $("#strDate2").val();
+				var tmp = new Date(dateText) - new Date(strDate);
+				if(tmp < 0 ){
+					alert("종료날짜가 시작날짜보다 이전일이 될 수 없습니다.");
+					return;
+				}
+				
+			} 
+		});
+});
+
+//조회 버튼 클릭시 처리
+function fn_search(){
+	//초기화
+	$("#data").html("");
+	var authId = $("#authId").val();
+	
+	$.ajax({
+		type : "post",
+		url : "/mgrKesti/pgtInfo/projectListLookup.do",
+		//data : {t1 : "Hello", t2 : "World"},
+		dataType : "json",
+		success : function(result) {
+			var listHtml = "";
+			if(result.resultList.length > 0){
+				for(var i=0; i < result.resultList.length; i++){
+					listHtml += "<tr>";
+					listHtml += "<td scope='row' style='text-align:left;'>" + result["resultList"][i].projectName + "</td>";
+					listHtml += "<td>" + result["resultList"][i].startDate + " ~ " + result["resultList"][i].endDate +"</td>";
+					listHtml += "<td>" + result["resultList"][i].customerName + "</td>";
+					listHtml += "<td>" + result["resultList"][i].agentName + "</td>";
+					listHtml += "<td>" + result["resultList"][i].suggestionType + "</td>";
+					listHtml += "<td>" + result["resultList"][i].predictMm + "</td>";
+					listHtml += "<td>" + result["resultList"][i].mmTotal +  "</td>";
+					
+					if(authId == 'A0002'){
+						listHtml += "<td>"
+						listHtml += "<input type='button' id='modify_btn' value='수정' " +
+								"onclick=" + "fn_modifyForm(" +"\'"+ result["resultList"][i].projectType + "\'," +
+								"\'" + result["resultList"][i].projectTypeCode + "\'," +
+								"\'" + result["resultList"][i].startDate + "\'," +
+								"\'" + result["resultList"][i].endDate + "\'," +
+								"\'" + result["resultList"][i].customerName + "\'," +
+								"\'" + result["resultList"][i].customerId + "\'," +
+								"\'" + result["resultList"][i].agentName + "\'," +
+								"\'" + result["resultList"][i].agentId + "\'," +
+								"\'" + result["resultList"][i].suggestionType + "\'," +
+								"\'" + result["resultList"][i].suggestionTypeCode + "\'," +
+								"\'" + result["resultList"][i].predictMm + "\'," +
+								"\'" + result["resultList"][i].projectName + "\')\>" 
+								
+						listHtml += "<input type='button' id='delete_btn' value='삭제' onclick='fn_crud(2, 0);' />"
+						listHtml += "</td>"
+					}else{
+						listHtml += "<td></td>";
+					}
+					
+					listHtml += "</tr>";
+				}
+				$("#data").append(listHtml);
+			}
+			
+		},error:function(request, status, error){
+			
+        }, beforeSend:function() {
+			//wrapWindowByMask();0
+		}, complete:function() {
+			//closeWindowByMask();
+		}
+	});
+}
+
+//수정 버튼 클릭시 처리
+function fn_crud(gbn, data){
+	switch(gbn){
+		//수정
+		case 1:
+			pushLayer2();
+			break;
+		//삭제
+		case 2:
+			
+			break;
+		case 3:
+			//프로젝트리스트 화면 이동
+			
+			break;
+		default :
+			break;
+	}
+}
+
+//수정 버튼 클릭시 처리
+function fn_modifyForm(projectType, projectTypeCode, startDate, endDate, customerName, customerId, agentName, agentId, suggestionType, suggestionTypeCode, predictMm, projectName){
+	//초기화
+	$("#projectName2").val("");	//프로젝트명
+	$("#predictMm2").val("");	//예상공수
+	
+	$("#projectTypeCode2").val(projectTypeCode).prop("selected", true);			//프로젝트유형 셋팅
+	$("#customerId2").val(customerId).prop("selected", true);					//고객사 셋팅
+	$("#agentId2").val(agentId).prop("selected", true);							//수행사 셋팅
+	$("#suggestionTypeCode2").val(suggestionTypeCode).prop("selected", true);	//제안현황 셋팅
+	
+	$("#projectName2").val(projectName);
+	$("#predictMm2").val(predictMm);
+	
+	
+	pushLayer2();
+}
+
+//등록 버튼 클릭시 처리
+function fn_insertForm(data){
+	
+}
+
+//로그아웃 버튼 클릭시 처리
+function fn_logout(){
+	var frm = document.lForm;
+	frm.action = "/mgrKesti/logInfo/login.do";
+	frm.submit();
+}
+
+//레이어팝업  오픈
+function pushLayer1(){
+	var $width=parseInt($("#lay_pop1").css("width"));
+	var $height=parseInt($("#lay_pop1").css("height"));
+	var left=($(window).width()-$width)/2;
+	var sctop=$(window).scrollTop()*2;
+	var top=($(window).height()-$height+sctop)/2;
+	//var height=document.getElementsByTagName("body")[0].scrollHeight;
+	$("#lay_pop1").css("left",left);
+	$("#lay_pop1").css("top",top);
+	$("#lay_pop1").css("display","block");
+	$("#lay_pop1").css("z-index","555");
+	$("#all_body1").css("display","block");
+	$("#all_body1").css("width",$(window).width());
+	$("#all_body1").css("height","887");
+}
+
+//레이어팝업  오픈
+function pushLayer2(){
+	var $width=parseInt($("#lay_pop2").css("width"));
+	var $height=parseInt($("#lay_pop2").css("height"));
+	var left=($(window).width()-$width)/2;
+	var sctop=$(window).scrollTop()*2;
+	var top=($(window).height()-$height+sctop)/2;
+	//var height=document.getElementsByTagName("body")[0].scrollHeight;
+	$("#lay_pop2").css("left",left);
+	$("#lay_pop2").css("top",top);
+	$("#lay_pop2").css("display","block");
+	$("#lay_pop2").css("z-index","555");
+	$("#all_body2").css("display","block");
+	$("#all_body2").css("width",$(window).width());
+	$("#all_body2").css("height","887");
+}
+
+function layerClose(lay1,lay2){
+	$("#"+lay1).css("display","none");
+	$("#"+lay2).css("display","none");
+}
